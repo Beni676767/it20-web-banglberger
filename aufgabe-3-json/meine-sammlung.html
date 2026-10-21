@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meine Spielesammlung</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --primary: #005a9c;
+            --surface: #fff;
+            --background: #f2f6fa;
+            --text: #222;
+            --muted: #536575;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 1rem;
+            background: var(--background);
+            color: var(--text);
+            font: 1rem Arial, sans-serif;
+        }
+        header, main { max-width: 1000px; margin: 0 auto; }
+        header {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            background: var(--primary);
+            color: white;
+        }
+        h1, h2, p { margin-top: 0; }
+        header p { margin-bottom: 0; }
+        section { margin: 1.5rem 0; }
+        .suche-bereich {
+            display: grid;
+            gap: 0.5rem;
+            max-width: 32rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #8999a8;
+            border-radius: 0.35rem;
+            font: inherit;
+        }
+        input:focus { outline: 3px solid #94c9f2; }
+        #anzahl { color: var(--muted); }
+        #liste {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .karte {
+            padding: 1rem;
+            border: 1px solid #d1dbe4;
+            border-radius: 0.6rem;
+            background: var(--surface);
+            box-shadow: 0 2px 6px rgb(0 0 0 / 7%);
+        }
+        .karte h3 { margin: 0 0 0.75rem; color: var(--primary); }
+        .karte p { margin: 0.4rem 0; }
+        .keine-treffer {
+            grid-column: 1 / -1;
+            padding: 1rem;
+            border: 1px dashed #8999a8;
+            border-radius: 0.6rem;
+            color: var(--muted);
+        }
+        pre {
+            overflow-x: auto;
+            padding: 1rem;
+            border-radius: 0.6rem;
+            background: #17212b;
+            color: #e8f1f8;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Meine Spielesammlung</h1>
+        <p>Hier sind meine Lieblingsspiele als JSON-Daten gesammelt.</p>
+    </header>
+    <main>
+        <section aria-labelledby="sammlung-titel">
+            <h2 id="sammlung-titel">Spiele suchen</h2>
+            <div class="suche-bereich">
+                <label for="suche">Nach einem Spieltitel suchen</label>
+                <input id="suche" type="search" placeholder="Zum Beispiel: Minecraft">
+            </div>
+            <p id="anzahl" aria-live="polite"></p>
+            <div id="liste" aria-live="polite"></div>
+        </section>
+        <section aria-labelledby="json-titel">
+            <h2 id="json-titel">Meine Rohdaten (JSON)</h2>
+            <pre id="rohdaten"></pre>
+        </section>
+    </main>
+    <script>
+        const daten = [
+            { titel: "Minecraft", kategorie: "Sandbox", bewertung: 10 },
+            { titel: "Deepwoken", kategorie: "Abenteuer", bewertung: 0 },
+            { titel: "Fortnite", kategorie: "Battle Royale", bewertung: 10 },
+            { titel: "CS2", kategorie: "Taktischer Shooter", bewertung: 10 },
+            { titel: "GTA 5", kategorie: "Open World", bewertung: 10 }
+        ];
+
+        const liste = document.querySelector("#liste");
+        const suche = document.querySelector("#suche");
+        const anzahl = document.querySelector("#anzahl");
+
+        function zeigeListe(eintraege) {
+            liste.replaceChildren();
+            anzahl.textContent = eintraege.length + " von " + daten.length + " Einträgen";
+
+            if (eintraege.length === 0) {
+                const meldung = document.createElement("p");
+                meldung.className = "keine-treffer";
+                meldung.textContent = "Keine Spiele gefunden. Probiere einen anderen Suchbegriff.";
+                liste.append(meldung);
+                return;
+            }
+
+            eintraege.forEach(function (eintrag) {
+                const karte = document.createElement("article");
+                karte.className = "karte";
+
+                const titel = document.createElement("h3");
+                titel.textContent = eintrag.titel;
+
+                const kategorie = document.createElement("p");
+                kategorie.textContent = "Kategorie: " + eintrag.kategorie;
+
+                const bewertung = document.createElement("p");
+                bewertung.textContent = "Bewertung: " + eintrag.bewertung + "/10";
+
+                karte.append(titel, kategorie, bewertung);
+                liste.append(karte);
+            });
+        }
+
+        suche.addEventListener("input", function () {
+            const suchtext = suche.value.trim().toLowerCase();
+            const treffer = daten.filter(function (eintrag) {
+                return eintrag.titel.toLowerCase().includes(suchtext);
+            });
+            zeigeListe(treffer);
+        });
+
+        document.querySelector("#rohdaten").textContent = JSON.stringify(daten, null, 2);
+        zeigeListe(daten);
+    </script>
+</body>
+</html>
