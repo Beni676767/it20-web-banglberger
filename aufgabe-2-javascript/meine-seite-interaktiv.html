@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meine Hobbys</title>
+    <style>
+        :root { --primary: #005a9c; }
+        body { margin: 0; padding: 1rem; font: 1rem Arial, sans-serif; color: #222; }
+        header, footer { padding: 1rem; color: white; background: var(--primary); }
+        nav, main { margin: 1rem 0; }
+        nav, .karten { display: flex; gap: 1rem; }
+        nav a { color: var(--primary); }
+        .karte { flex: 1; padding: 1rem; border: 1px solid #aaa; }
+        h2 { color: var(--primary); }
+        img { max-width: 100%; height: auto; }
+        .interaktiv { margin: 1rem 0; padding: 1rem; border: 1px solid #aaa; }
+        .interaktiv button { margin: 0.25rem 0; padding: 0.5rem 0.75rem; cursor: pointer; }
+        .interaktiv input { margin: 0.5rem 0; padding: 0.5rem; }
+        .versteckt { display: none; }
+        @media (max-width: 700px) {
+            .karten { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Meine Hobbys</h1>
+    </header>
+    <nav>
+        <a href="#hobbys">Hobbys</a>
+        <a href="#freizeit">Freizeit</a>
+    </nav>
+    <main>
+        <div class="karten">
+            <section class="karte" id="hobbys">
+                <h2>Was ich gerne mache</h2>
+                <img src="https://media.craiyon.com/2025-08-07/YsAFLzdRSt6n25EtNh-NOQ.webp" alt="Sportliche Aktivität">
+                <p>In meiner Freizeit beschäftige ich mich gerne mit verschiedenen Hobbys. Dabei kann ich Neues lernen, kreativ sein und den Alltag für eine Weile vergessen. Besonders schön ist es, wenn ich Fortschritte bemerke oder etwas gemeinsam mit anderen unternehme.</p>
+            </section>
+            <section class="karte" id="freizeit">
+                <h2>Meine Freizeit</h2>
+                <p>Für mich ist Freizeit wichtig, weil ich dabei Energie sammeln und eigene Interessen verfolgen kann. Manchmal plane ich vorher, was ich machen möchte, und manchmal entscheide ich spontan. So bleibt genug Platz für Abwechslung und neue Ideen.</p>
+                <ul>
+                    <li>Musik hören</li>
+                    <li>Mit Freunden Zeit verbringen</li>
+                    <li>Sport</li>
+                </ul>
+            </section>
+        </div>
+    </main>
+    <section class="interaktiv" aria-labelledby="interaktiv-titel">
+        <h2 id="interaktiv-titel">Meine Seite zum Ausprobieren</h2>
+
+        <h3>Klick-Reaktion</h3>
+        <button id="knopf" type="button">Klick mich</button>
+        <p id="ausgabe" aria-live="polite">Hier erscheint eine Nachricht.</p>
+
+        <h3>Zähler</h3>
+        <button id="zaehler-knopf" type="button">Zähler erhöhen</button>
+        <p>Klicks: <span id="zaehler-ausgabe" aria-live="polite">0</span></p>
+
+        <h3>Begrüßung</h3>
+        <label for="name">Wie heißt du?</label><br>
+        <input id="name" type="text" autocomplete="given-name">
+        <button id="begrussung-knopf" type="button">Begrüßen</button>
+        <p id="begrussung-ausgabe" aria-live="polite"></p>
+
+        <h3>Zusatzinfo</h3>
+        <button id="info-knopf" type="button" aria-controls="zusatzinfo" aria-expanded="true">Info ein- oder ausblenden</button>
+        <p id="zusatzinfo">Freizeit und Hobbys helfen dabei, neue Energie zu sammeln.</p>
+    </section>
+    <footer>
+        <p>Danke fürs Anschauen!</p>
+    </footer>
+    <script>
+        // Baustein 1: Per Klick den Text auf der Seite ändern.
+        const ausgabe = document.querySelector("#ausgabe");
+        document.querySelector("#knopf").addEventListener("click", function () {
+            ausgabe.textContent = "Schön, dass du meine Seite ausprobierst!";
+        });
+
+        // Baustein 2: Bei jedem Klick den Zähler um 1 erhöhen.
+        let zaehler = 0;
+        const zaehlerAusgabe = document.querySelector("#zaehler-ausgabe");
+        document.querySelector("#zaehler-knopf").addEventListener("click", function () {
+            zaehler = zaehler + 1;
+            zaehlerAusgabe.textContent = zaehler;
+        });
+
+        // Baustein 3: Namen auslesen und eine leere Eingabe abfangen.
+        const nameEingabe = document.querySelector("#name");
+        const begruessungAusgabe = document.querySelector("#begrussung-ausgabe");
+        document.querySelector("#begrussung-knopf").addEventListener("click", function () {
+            const name = nameEingabe.value.trim();
+            if (name === "") {
+                begruessungAusgabe.textContent = "Bitte gib zuerst deinen Namen ein.";
+            } else {
+                begruessungAusgabe.textContent = "Hallo, " + name + "!";
+            }
+        });
+
+        // Baustein 4: Die Zusatzinfo per Klick ein- und ausblenden.
+        const zusatzinfo = document.querySelector("#zusatzinfo");
+        const infoKnopf = document.querySelector("#info-knopf");
+        infoKnopf.addEventListener("click", function () {
+            zusatzinfo.classList.toggle("versteckt");
+            infoKnopf.setAttribute("aria-expanded", !zusatzinfo.classList.contains("versteckt"));
+        });
+    </script>
+</body>
+</html>
